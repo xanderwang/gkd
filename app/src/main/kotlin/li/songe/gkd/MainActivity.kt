@@ -116,6 +116,12 @@ class MainActivity : ComponentActivity() {
         // 用户在系统权限设置中切换权限后再切换回应用时能及时更新状态
         appScope.launchTry(Dispatchers.IO) {
             updatePermissionState()
+            ManageService.startObserverSMS()
+            // if (checkOrRequestPermission(this@MainActivity, canReadSmsState)) {
+            //     ManageService.startObserverSMS()
+            //     // SMSReceiver.register(this@MainActivity)
+            //     // SMSObserver.register(Handler(),this@MainActivity)
+            // }
         }
 
         // 由于某些机型的进程存在 安装缓存/崩溃缓存 导致服务状态可能不正确, 在此保证每次界面切换都能重新刷新状态

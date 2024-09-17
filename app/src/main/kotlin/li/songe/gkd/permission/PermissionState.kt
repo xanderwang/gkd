@@ -162,6 +162,23 @@ val writeSecureSettingsState by lazy {
     )
 }
 
+val canReadSmsState by lazy {
+    PermissionState(
+        check = {
+            XXPermissions.isGranted(app, Permission.READ_SMS)
+        },
+        request = {
+            asyncRequestPermission(it, Permission.READ_SMS)
+        },
+        reason = AuthReason(
+            text = "当前操作需要[读取短信权限]\n\n您需要前往应用权限设置打开此权限",
+            confirm = {
+                XXPermissions.startPermissionActivity(app, Permission.READ_SMS)
+            }
+        ),
+    )
+}
+
 val shizukuOkState by lazy {
     PermissionState(
         check = {
@@ -183,6 +200,7 @@ suspend fun updatePermissionState() {
             notificationState,
             canDrawOverlaysState,
             canWriteExternalStorage,
+            canReadSmsState,
         ).forEach { it.updateAndGet() }
         if (canQueryPkgState.stateFlow.value != canQueryPkgState.updateAndGet()) {
             appScope.launchTry {

@@ -47,3 +47,12 @@ val httpNotif by lazy {
         autoCancel = false,
     )
 }
+
+val alarmNotif by lazy {
+    Notif(
+        id = 104,
+        text = "你被交警贴条了，点我停止通知",
+        ongoing = true,
+        autoCancel = false,
+    )
+}

@@ -41,9 +41,11 @@ import com.ramcosta.composedestinations.utils.toDestinationsNavigator
 import kotlinx.coroutines.flow.update
 import li.songe.gkd.META
 import li.songe.gkd.MainActivity
+import li.songe.gkd.ui.component.InputDialog
 import li.songe.gkd.ui.component.RotatingLoadingIcon
 import li.songe.gkd.ui.component.SettingItem
 import li.songe.gkd.ui.component.TextMenu
+import li.songe.gkd.ui.component.TextRow
 import li.songe.gkd.ui.component.TextSwitch
 import li.songe.gkd.ui.component.updateDialogOptions
 import li.songe.gkd.ui.component.waitResult
@@ -72,6 +74,10 @@ fun useSettingsPage(): ScaffoldExt {
     val navController = LocalNavController.current
     val store by storeFlow.collectAsState()
     val vm = viewModel<HomeVm>()
+
+    var showMsgContentInputDlg by remember {
+        mutableStateOf(false)
+    }
 
     var showToastInputDlg by remember {
         mutableStateOf(false)
@@ -125,6 +131,18 @@ fun useSettingsPage(): ScaffoldExt {
                 )
             }
         })
+    }
+    if (showMsgContentInputDlg) {
+        InputDialog(
+            rowValue = store.msgContentKey,
+            dismiss = { showMsgContentInputDlg = false },
+            confirm = { newValue ->
+                storeFlow.value = store.copy(
+                    msgContentKey = newValue
+                )
+                showMsgContentInputDlg = false
+            }
+        )
     }
     if (showNotifTextInputDlg) {
         var value by remember {
@@ -363,7 +381,13 @@ fun useSettingsPage(): ScaffoldExt {
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.primary,
             )
-
+            TextRow(
+                name = "监听的消息内容",
+                desc = store.msgContentKey,
+                modifier = Modifier.clickable {
+                    showMsgContentInputDlg = true
+                },
+            )
             SettingItem(title = "高级设置", onClick = {
                 navController.toDestinationsNavigator().navigate(AdvancedPageDestination)
             })

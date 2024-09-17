@@ -69,6 +69,7 @@ data class Store(
     val customNotifText: String = "\${i}全局/\${k}应用/\${u}规则组/\${n}触发",
     val enableActivityLog: Boolean = false,
     val updateChannel: Int = if (META.versionName.contains("beta")) UpdateChannelOption.Beta.value else UpdateChannelOption.Stable.value,
+    val msgContentKey: String = "上海交警",
 )
 
 val storeFlow by lazy {

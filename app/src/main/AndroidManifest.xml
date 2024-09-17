@@ -31,6 +31,20 @@
         android:name="android.permission.WRITE_SECURE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
 
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <!-- 接收消息 -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <!--  发送消息-->
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <!--  阅读消息-->
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <!--  写入消息-->
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.BROADCAST_SMS"
+        tools:ignore="ProtectedPermissions" />
+
     <application
         android:name="li.songe.gkd.App"
         android:allowBackup="true"
@@ -197,6 +211,14 @@
         <service
             android:name="com.blankj.utilcode.util.MessengerUtils$ServerService"
             tools:node="remove" />
+
+        <!--        <receiver-->
+        <!--            android:name="io.xanderwang.service.SMSReceiver"-->
+        <!--            android:exported="false">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.provider.Telephony.SMS_RECEIVED" />-->
+        <!--            </intent-filter>-->
+        <!--        </receiver>-->
 
     </application>
 

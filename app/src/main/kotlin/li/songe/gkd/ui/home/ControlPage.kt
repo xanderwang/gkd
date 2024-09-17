@@ -1,5 +1,6 @@
 package li.songe.gkd.ui.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -31,8 +35,11 @@ import com.ramcosta.composedestinations.generated.destinations.AuthA11YPageDesti
 import com.ramcosta.composedestinations.generated.destinations.ClickLogPageDestination
 import com.ramcosta.composedestinations.generated.destinations.SlowGroupPageDestination
 import com.ramcosta.composedestinations.utils.toDestinationsNavigator
+import io.xanderwang.service.readMsg
 import li.songe.gkd.MainActivity
 import li.songe.gkd.a11yServiceEnabledFlow
+import li.songe.gkd.appScope
+import li.songe.gkd.permission.canReadSmsState
 import li.songe.gkd.permission.notificationState
 import li.songe.gkd.permission.requiredPermission
 import li.songe.gkd.permission.writeSecureSettingsState
@@ -41,12 +48,14 @@ import li.songe.gkd.service.ManageService
 import li.songe.gkd.service.switchA11yService
 import li.songe.gkd.ui.component.AuthCard
 import li.songe.gkd.ui.component.SettingItem
+import li.songe.gkd.ui.component.TextRow
 import li.songe.gkd.ui.component.TextSwitch
 import li.songe.gkd.ui.style.EmptyHeight
 import li.songe.gkd.ui.style.itemPadding
 import li.songe.gkd.util.HOME_PAGE_URL
 import li.songe.gkd.util.LocalNavController
 import li.songe.gkd.util.launchAsFn
+import li.songe.gkd.util.launchTry
 import li.songe.gkd.util.openUri
 import li.songe.gkd.util.ruleSummaryFlow
 import li.songe.gkd.util.storeFlow
@@ -61,6 +70,11 @@ fun useControlPage(): ScaffoldExt {
     val vm = viewModel<HomeVm>()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val scrollState = rememberScrollState()
+    var lastMsgContent by remember {
+        // mutableStateOf("点击读取最新的短信")
+        mutableStateOf(readMsg(context).firstOrNull()?.let { "from:${it.from} content:${it.content}" } ?: "点击读取最新的短信")
+        // readMsg(context).firstOrNull()?.let { "from:${it.from} content:${it.content}" } ?: "点击读取最新的短信"
+    }
     return ScaffoldExt(navItem = controlNav,
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -181,7 +195,24 @@ fun useControlPage(): ScaffoldExt {
                     )
                 }
             }
-
+            HorizontalDivider()
+            TextRow(
+                name = "最近收到的短信",
+                desc = lastMsgContent,
+                modifier = Modifier.clickable {
+                    if (canReadSmsState.updateAndGet()) {
+                        appScope.launchTry {
+                            val content =
+                                readMsg(context).firstOrNull()?.let { "from:${it.from} content:${it.content}" }
+                                    ?: "暂无短信"
+                            lastMsgContent = content
+                        }
+                    } else {
+                        // 读取短信
+                        lastMsgContent = "请在设置打开短信权限"
+                    }
+                },
+            )
             Spacer(modifier = Modifier.height(EmptyHeight))
         }
     }
