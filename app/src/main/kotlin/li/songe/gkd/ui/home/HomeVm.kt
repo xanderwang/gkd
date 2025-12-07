@@ -63,4 +63,6 @@ class HomeVm : BaseViewModel() {
     val showNotifTextInputDlgFlow = MutableStateFlow(false)
     val showToastSettingsDlgFlow = MutableStateFlow(false)
     val showA11yBlockDlgFlow = MutableStateFlow(false)
+
+    val showXMsgKeyDlgFlow = MutableStateFlow(false)
 }

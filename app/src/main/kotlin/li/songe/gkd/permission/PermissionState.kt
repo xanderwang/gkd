@@ -62,7 +62,7 @@ private fun checkSelfPermission(permission: String): Boolean {
     ) == PackageManager.PERMISSION_GRANTED
 }
 
-private suspend fun asyncRequestPermission(
+suspend fun asyncRequestPermission(
     context: Activity,
     permission: IPermission,
 ): PermissionResult {

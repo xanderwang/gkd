@@ -1,5 +1,26 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
+import kotlin.collections.forEach
 import kotlin.reflect.full.declaredMemberProperties
+
+val localProperties: Map<String, Any> = mutableMapOf<String, Any>().apply {
+    val localProp = Properties()
+    val localPropFile = File(project.rootProject.projectDir, "local.properties")
+    if (localPropFile.isFile) {
+        localPropFile.inputStream().use { input ->
+            localProp.load(input)
+        }
+        localProp.entries.forEach { item ->
+            this@apply[item.key.toString()] = item.value
+        }
+    }
+}
+
+fun getProperties(key: String): String {
+    val value = (localProperties[key] ?: project.properties[key] ?: "").toString()
+    // println("------getProperties $key: $value")
+    return value
+}
 
 fun String.runCommand(): String {
     val process = ProcessBuilder(split(" "))
@@ -92,18 +113,18 @@ android {
     }
 
     val gkdSigningConfig = signingConfigs.create("gkd") {
-        storeFile = file(project.properties["GKD_STORE_FILE"] as String)
-        storePassword = project.properties["GKD_STORE_PASSWORD"].toString()
-        keyAlias = project.properties["GKD_KEY_ALIAS"].toString()
-        keyPassword = project.properties["GKD_KEY_PASSWORD"].toString()
+        storeFile = file(getProperties("GKD_STORE_FILE"))
+        storePassword = getProperties("GKD_STORE_PASSWORD")
+        keyAlias = getProperties("GKD_KEY_ALIAS")
+        keyPassword = getProperties("GKD_KEY_PASSWORD")
     }
 
     val playSigningConfig = if (project.hasProperty("PLAY_STORE_FILE")) {
         signingConfigs.create("play") {
-            storeFile = file(project.properties["PLAY_STORE_FILE"].toString())
-            storePassword = project.properties["PLAY_STORE_PASSWORD"].toString()
-            keyAlias = project.properties["PLAY_KEY_ALIAS"].toString()
-            keyPassword = project.properties["PLAY_KEY_PASSWORD"].toString()
+            storeFile = file(getProperties("PLAY_STORE_FILE"))
+            storePassword = getProperties("PLAY_STORE_PASSWORD")
+            keyAlias = getProperties("PLAY_KEY_ALIAS")
+            keyPassword = getProperties("PLAY_KEY_PASSWORD")
         }
     } else {
         null
