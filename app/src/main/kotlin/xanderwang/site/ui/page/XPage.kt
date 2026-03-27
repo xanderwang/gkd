@@ -84,7 +84,7 @@ fun useXPage(): ScaffoldExt {
             TextSwitch(
                 title = "短信内容监控",
                 subtitle = store.msgKey,
-                checked = store.enableWatchMsg,
+                checked = store.enableWatchSMS,
                 onClickLabel = "打开触发提示弹窗",
                 onClick = {
                     msgKeyDlgFlow = true
@@ -104,7 +104,7 @@ fun useXPage(): ScaffoldExt {
                 // },
                 onCheckedChange = {
                     xPageStoreFlow.value = store.copy(
-                        enableWatchMsg = it
+                        enableWatchSMS = it
                     )
                     if (it) toast("已打开短信监听") else toast("已关闭短信监听")
                 })

@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class XpageStore(
-    val enableWatchMsg: Boolean = true,
+    val enableWatchSMS: Boolean = true,
     val msgKey: String = "交警",
 )

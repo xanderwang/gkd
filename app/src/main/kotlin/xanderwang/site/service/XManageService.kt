@@ -10,12 +10,13 @@ import android.os.Looper
 import android.os.Message
 import com.blankj.utilcode.util.LogUtils
 import li.songe.gkd.app
+import li.songe.gkd.service.StatusService
 import xanderwang.site.notify.cancelNotif
 import xanderwang.site.notify.smsNotif
-import xanderwang.site.notify.startTrafficNotif
+import xanderwang.site.notify.startSMSNotif
 
-fun xServiceClass(): Class<XManageService> {
-    return XManageService::class.java
+fun xServiceClass(): Class<*> {
+    return StatusService::class.java
 }
 
 object XManageService {
@@ -40,12 +41,12 @@ object XManageService {
     private fun stopAlarm() {
         if (alarmPlayer?.isPlaying == true) {
             alarmPlayer?.stop()
-            alarmPlayer?.prepare()
         }
     }
 
     private fun startAlarm() {
         stopAlarm()
+        alarmPlayer?.prepare()
         alarmPlayer?.start()
     }
 
@@ -58,7 +59,7 @@ object XManageService {
         true
     }
 
-    fun onStartCommand(service: Service, intent: Intent?) {
+    fun onStartCommand(service: Service, intent: Intent?): Boolean {
         val action = intent?.getIntExtra(KEY_ACTION, -1) ?: -1
         LogUtils.d("onStartCommand", action, intent)
         when (action) {
@@ -66,8 +67,8 @@ object XManageService {
                 xHandler.removeMessages(ACTION_START_ALARM)
                 xHandler.sendMessageDelayed(Message.obtain().apply {
                     what = ACTION_START_ALARM
-                }, 3000L)
-                startTrafficNotif(service, smsNotif)
+                }, 1000L)
+                startSMSNotif(service, smsNotif)
             }
 
             ACTION_STOP_ALARM -> {
@@ -86,33 +87,15 @@ object XManageService {
                 SmsObserver.unregister()
             }
         }
+        return false
     }
 
     fun startAlarm(context: Context = app) {
         val intent = Intent(context, xServiceClass()).apply {
             putExtra(KEY_ACTION, ACTION_START_ALARM)
         }
-        context.startForegroundService(intent)
+        // 给 service 发送消息
+        context.startService(intent)
     }
 
-    fun stopAlarm(context: Context = app) {
-        val intent = Intent(context, xServiceClass()).apply {
-            putExtra(KEY_ACTION, ACTION_STOP_ALARM)
-        }
-        context.startForegroundService(intent)
-    }
-
-    fun startObserverSMS(context: Context = app) {
-        val intent = Intent(context, xServiceClass()).apply {
-            putExtra(KEY_ACTION, ACTION_START_OBSERVER_SMS)
-        }
-        context.startForegroundService(intent)
-    }
-
-    fun stopObserverSMS(context: Context = app) {
-        val intent = Intent(context, xServiceClass()).apply {
-            putExtra(KEY_ACTION, ACTION_STOP_OBSERVER_SMS)
-        }
-        context.startForegroundService(intent)
-    }
 }

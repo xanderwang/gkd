@@ -7,10 +7,10 @@ import li.songe.gkd.permission.AuthReason
 import li.songe.gkd.permission.PermissionState
 import li.songe.gkd.permission.asyncRequestPermission
 
-val canReadSmsState by lazy {
+val readSmsState by lazy {
     val permission = PermissionLists.getReadSmsPermission()
     PermissionState(
-        name = "短信权限",
+        name = "读取短信权限",
         check = {
             XXPermissions.isGrantedPermission(app, permission)
         },

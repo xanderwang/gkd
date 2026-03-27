@@ -1,5 +1,6 @@
 package xanderwang.site.notify
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
@@ -13,18 +14,26 @@ import androidx.core.app.NotificationManagerCompat
 import li.songe.gkd.notif.Notif
 import xanderwang.site.service.XManageService
 
-fun startTrafficNotif(service: Service, notif: Notif) {
-    val trafficIntent = Intent(service, XManageService::class.java).apply {
+/** 开始短信报警通知 */
+fun startSMSNotif(service: Service, notif: Notif) {
+    val smsIntent = Intent(service, XManageService::class.java).apply {
         putExtra(XManageService.KEY_ACTION, XManageService.ACTION_STOP_ALARM)
     }
-    val pendingTrafficIntent = PendingIntent.getService(
-        service, notif.id, trafficIntent, FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT
+    startNotif(service, notif, smsIntent)
+    notif.notifySelf()
+}
+
+/** 开始通知 */
+@SuppressLint("LaunchActivityFromNotification")
+fun startNotif(service: Service, notif: Notif, notifIntent: Intent) {
+    val pendingIntent = PendingIntent.getService(
+        service, notif.id, notifIntent, FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT
     )
     val builder = NotificationCompat.Builder(service, notif.channel.id)
         .setSmallIcon(notif.smallIcon)
         .setContentTitle(notif.title)
         .setContentText(notif.text)
-        .setContentIntent(pendingTrafficIntent)
+        .setContentIntent(pendingIntent)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setOngoing(notif.ongoing)
         .setAutoCancel(notif.autoCancel)
@@ -38,6 +47,7 @@ fun startTrafficNotif(service: Service, notif: Notif) {
     }
 }
 
+/** 取消通知 */
 fun cancelNotif(context: Context, notif: Notif) {
     NotificationManagerCompat.from(context).cancel(notif.id)
 }

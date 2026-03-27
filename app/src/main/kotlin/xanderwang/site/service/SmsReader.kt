@@ -1,17 +1,12 @@
 package xanderwang.site.service
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.database.ContentObserver
 import android.database.Cursor
 import android.net.Uri
 import android.os.Handler
 import android.provider.Telephony
-import android.telephony.SmsMessage
-import android.widget.Toast
 import com.blankj.utilcode.util.LogUtils
 import li.songe.gkd.store.xPageStoreFlow
 
@@ -28,7 +23,7 @@ class SmsObserver(val context: Context, handler: Handler) : ContentObserver(hand
     override fun onChange(selfChange: Boolean, uri: Uri?) {
         super.onChange(selfChange, uri)
         LogUtils.d("onChange", selfChange, uri)
-        readMsg(context).firstOrNull()?.let {
+        readSms(context).firstOrNull()?.let {
             val msgContent = it.content
             val msgKey = xPageStoreFlow.value.msgKey
             LogUtils.d("onChange content: $msgContent ,from:${it.from}")
@@ -52,8 +47,8 @@ class SmsObserver(val context: Context, handler: Handler) : ContentObserver(hand
         @SuppressLint("StaticFieldLeak")
         private var smsObserver: SmsObserver? = null
 
-        private fun getObserver(context: Context, handler: Handler): SmsObserver? {
-            if (null == smsObserver) {
+        private fun getObserver(context: Context? = null, handler: Handler? = null): SmsObserver? {
+            if (null == smsObserver && null != context && null != handler) {
                 smsObserver = SmsObserver(context, handler)
             }
             return smsObserver
@@ -65,74 +60,9 @@ class SmsObserver(val context: Context, handler: Handler) : ContentObserver(hand
         }
 
         fun unregister() {
-            smsObserver?.unregister()
+            getObserver()?.unregister()
         }
     }
-}
-
-/**
- * 消息广播接收器
- * @author xander
- */
-@Deprecated("广播不准")
-class SmsReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent) {
-        val intentAction = intent.action
-        LogUtils.d("onReceive: $intent")
-        if (intentAction == SMS_RECEIVER_ACTION) {
-            // intent.getExtras()方法就是从过滤后的意图中获取携带的数据，
-            // 这里携带的是以"pdus"为key、短信内容为value的键值对
-            // android设备接收到的 SMS 是 pdu 形式的
-            val format = intent.getStringExtra("format")
-            intent.extras?.let { bundle ->
-                var fullContent = ""
-                var from = ""
-                var msgKey = ""
-                val pdus: Array<ByteArray> = bundle["pdus"] as? Array<ByteArray> ?: return@let
-                for (pdu in pdus) {
-                    val msg = SmsMessage.createFromPdu(pdu, format)
-                    fullContent += msg.displayMessageBody
-                    from = msg.originatingAddress ?: ""
-                    msgKey = xPageStoreFlow.value.msgKey
-                }
-                Toast.makeText(context, "收到信息: $fullContent", Toast.LENGTH_LONG).show()
-                LogUtils.d("onReceive content: $fullContent ,from:$from")
-                if (fullContent.contains(msgKey) || fullContent.lowercase().contains(msgKey.lowercase())) {
-                    // startAlarmService()
-                }
-            }
-        }
-
-    }
-
-    companion object {
-
-
-        private val SMS_RECEIVER by lazy { SmsReceiver() }
-
-        private const val SMS_RECEIVER_ACTION = "android.provider.Telephony.SMS_RECEIVED"
-        private const val SMS_DELIVER_ACTION = "android.provider.Telephony.SMS_DELIVER"
-
-        fun register(context: Context) {
-            unregister(context)
-            LogUtils.d("register")
-            val smsFilter = IntentFilter()
-            smsFilter.addAction(SMS_RECEIVER_ACTION)
-            smsFilter.addAction(SMS_DELIVER_ACTION)
-            runCatching {
-                context.registerReceiver(SMS_RECEIVER, smsFilter)
-            }
-        }
-
-        fun unregister(context: Context) {
-            LogUtils.d("unregister")
-            runCatching {
-                context.unregisterReceiver(SMS_RECEIVER)
-            }
-        }
-
-    }
-
 }
 
 /**
@@ -154,8 +84,8 @@ data class Msg(
  * @param limit 读取条数
  * @return 短信列表
  */
-fun readMsg(context: Context, limit: Int = 1): List<Msg> {
-    val msgList = mutableListOf<Msg>()
+fun readSms(context: Context, limit: Int = 1): List<Msg> {
+    val smsList = mutableListOf<Msg>()
     runCatching {
         // 定义短信 URI 和列
         val smsUri: Uri = Telephony.Sms.CONTENT_URI
@@ -182,13 +112,13 @@ fun readMsg(context: Context, limit: Int = 1): List<Msg> {
                     val id = cursor.getString(idIndex)
                     val from = cursor.getString(addressIndex)
                     val content = cursor.getString(bodyIndex)
-                    msgList += Msg(id, from, content)
-                } while (cursor.moveToNext() && msgList.size < limit)
+                    smsList.add(Msg(id, from, content))
+                } while (cursor.moveToNext() && smsList.size < limit)
             }
             it.close()
         }
     }.onFailure {
         LogUtils.e("readMsg error", it)
     }
-    return msgList
+    return smsList
 }
