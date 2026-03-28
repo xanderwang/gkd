@@ -123,6 +123,7 @@ class StatusService : Service(), OnSimpleLife {
                         ).notifyService()
                     }
             }
+            XManageService.start()
         }
     }
 

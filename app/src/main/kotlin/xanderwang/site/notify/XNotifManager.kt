@@ -26,8 +26,13 @@ fun startSMSNotif(service: Service, notif: Notif) {
 /** 开始通知 */
 @SuppressLint("LaunchActivityFromNotification")
 fun startNotif(service: Service, notif: Notif, notifIntent: Intent) {
+    val flags = FLAG_UPDATE_CURRENT or if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        FLAG_IMMUTABLE
+    } else {
+        0
+    }
     val pendingIntent = PendingIntent.getService(
-        service, notif.id, notifIntent, FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT
+        service, notif.id, notifIntent, flags
     )
     val builder = NotificationCompat.Builder(service, notif.channel.id)
         .setSmallIcon(notif.smallIcon)

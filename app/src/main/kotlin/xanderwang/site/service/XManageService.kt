@@ -9,6 +9,9 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import com.blankj.utilcode.util.LogUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import li.songe.gkd.app
 import li.songe.gkd.service.StatusService
 import xanderwang.site.notify.cancelNotif
@@ -26,6 +29,8 @@ object XManageService {
     const val ACTION_STOP_ALARM = 1001
     const val ACTION_START_OBSERVER_SMS = 1010
     const val ACTION_STOP_OBSERVER_SMS = 1011
+
+    val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private val alarmPlayer by lazy {
         val alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
@@ -72,6 +77,7 @@ object XManageService {
             }
 
             ACTION_STOP_ALARM -> {
+                xHandler.removeMessages(ACTION_START_ALARM)
                 xHandler.removeMessages(ACTION_STOP_ALARM)
                 xHandler.sendMessage(Message.obtain().apply {
                     what = ACTION_STOP_ALARM
@@ -79,13 +85,13 @@ object XManageService {
                 cancelNotif(service, smsNotif)
             }
 
-            ACTION_START_OBSERVER_SMS -> {
-                SmsObserver.register(service, xHandler)
-            }
-
-            ACTION_STOP_OBSERVER_SMS -> {
-                SmsObserver.unregister()
-            }
+            // ACTION_START_OBSERVER_SMS -> {
+            //     SmsObserver.register(service, xHandler)
+            // }
+            //
+            // ACTION_STOP_OBSERVER_SMS -> {
+            //     SmsObserver.unregister()
+            // }
         }
         return false
     }
@@ -98,4 +104,7 @@ object XManageService {
         context.startService(intent)
     }
 
+    fun start() {
+        SmsObserver.register(xHandler)
+    }
 }
