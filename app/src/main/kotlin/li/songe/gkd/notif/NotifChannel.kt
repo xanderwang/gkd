@@ -6,7 +6,7 @@ import androidx.core.app.NotificationManagerCompat
 import li.songe.gkd.META
 import li.songe.gkd.app
 
-sealed class NotifChannel(
+open class NotifChannel(
     val id: String,
     val name: String? = null,
     val desc: String? = null,

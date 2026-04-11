@@ -60,7 +60,7 @@ class PermissionState(
     }
 }
 
-private suspend fun asyncRequestPermission(
+suspend fun asyncRequestPermission(
     context: Activity,
     permission: IPermission,
 ): PermissionResult {

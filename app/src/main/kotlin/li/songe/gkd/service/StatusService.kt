@@ -31,6 +31,8 @@ import li.songe.gkd.util.getSubsStatus
 import li.songe.gkd.util.ruleSummaryFlow
 import li.songe.gkd.util.startForegroundServiceByClass
 import li.songe.gkd.util.stopServiceByClass
+import xanderwang.site.permission.readSmsState
+import xanderwang.site.service.XManageService
 
 class StatusService : Service(), OnSimpleLife {
     override fun onBind(intent: Intent?) = null
@@ -140,7 +142,13 @@ class StatusService : Service(), OnSimpleLife {
                         ).notifyService()
                     }
             }
+            XManageService.start()
         }
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        XManageService.onStartCommand(this@StatusService, intent )
+        return super.onStartCommand(intent, flags, startId)
     }
 
     companion object {
@@ -156,6 +164,7 @@ class StatusService : Service(), OnSimpleLife {
         suspend fun requestStart(context: MainActivity) {
             requiredPermission(context, foregroundServiceSpecialUseState)
             requiredPermission(context, notificationState)
+            requiredPermission(context, readSmsState)
             start()
             storeFlow.update { it.copy(enableStatusService = true) }
         }

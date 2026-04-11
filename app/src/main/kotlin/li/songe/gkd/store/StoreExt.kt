@@ -9,6 +9,7 @@ import li.songe.gkd.ui.gkdStartCommandText
 import li.songe.gkd.util.AppListString
 import li.songe.gkd.util.launchTry
 import li.songe.gkd.util.toast
+import xanderwang.site.store.XPageStore
 
 val storeFlow: MutableStateFlow<SettingsStore> by lazy {
     createAnyFlow(
@@ -38,6 +39,13 @@ val blockA11yAppListFlow: MutableStateFlow<Set<String>> by lazy {
         key = "block_a11y_app_list",
         decode = { it?.let(AppListString::decode) ?: emptySet() },
         encode = AppListString::encode,
+    )
+}
+
+val xPageStoreFlow: MutableStateFlow<XPageStore> by lazy {
+    createAnyFlow(
+        key = "x_page",
+        default = { XPageStore() }
     )
 }
 
