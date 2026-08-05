@@ -5,8 +5,9 @@ import android.app.NotificationManager
 import androidx.core.app.NotificationManagerCompat
 import li.songe.gkd.META
 import li.songe.gkd.app
+import xanderwang.site.notify.smsChannel
 
-sealed class NotifChannel(
+open class NotifChannel(
     val id: String,
     val name: String? = null,
     val desc: String? = null,
@@ -22,7 +23,7 @@ sealed class NotifChannel(
 }
 
 fun initChannel() {
-    val channels = arrayOf(NotifChannel.Default, NotifChannel.Snapshot)
+    val channels = arrayOf(NotifChannel.Default, NotifChannel.Snapshot, smsChannel)
     val manager = NotificationManagerCompat.from(app)
     // delete old channels
     manager.notificationChannels.filter { channels.none { c -> c.id == it.id } }.forEach {

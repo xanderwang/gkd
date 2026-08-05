@@ -75,6 +75,7 @@ import li.songe.gkd.service.fixRestartAutomatorService
 import li.songe.gkd.service.updateTopTaskAppId
 import li.songe.gkd.shizuku.automationRegisteredExceptionFlow
 import li.songe.gkd.shizuku.shizukuContextFlow
+import xanderwang.site.service.OverlayTimeService
 import li.songe.gkd.store.storeFlow
 import li.songe.gkd.ui.A11YScopeAppListRoute
 import li.songe.gkd.ui.A11yEventLogPage
@@ -252,6 +253,7 @@ class MainActivity : ComponentActivity() {
         }
         watchKeyboardVisible()
         StatusService.autoStart()
+        OverlayTimeService.autoStart()
         if (storeFlow.value.enableBlockA11yAppList) {
             updateTopTaskAppId(META.appId)
         }

@@ -27,6 +27,12 @@
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <!--读取短信用于监控关键字-->
+    <uses-permission android:name="android.permission.READ_SMS" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -192,6 +198,15 @@
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Provide an interface for third-party applications to actively invoke snapshot capturing." />
+        </service>
+
+        <service
+            android:name="xanderwang.site.service.OverlayTimeService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Display a floating clock showing the current time on all screens." />
         </service>
 
         <service

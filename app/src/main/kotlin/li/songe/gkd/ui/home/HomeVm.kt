@@ -76,4 +76,7 @@ class HomeVm : BaseViewModel() {
     val showA11yBlockDlgFlow = MutableStateFlow(false)
     val showBackupDlgFlow = MutableStateFlow(false)
     val showExportBackupDlgFlow = MutableStateFlow(false)
+
+    val showXMsgKeyDlgFlow = MutableStateFlow(false)
+    val showTimeOverlaySettingsFlow = MutableStateFlow(false)
 }

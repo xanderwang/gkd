@@ -1,6 +1,7 @@
 package li.songe.gkd.store
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import li.songe.gkd.appScope
 import li.songe.gkd.service.ExposeService
@@ -8,6 +9,7 @@ import li.songe.gkd.ui.gkdStartCommandText
 import li.songe.gkd.util.AppListString
 import li.songe.gkd.util.launchTry
 import li.songe.gkd.util.toast
+import xanderwang.site.store.XPageStore
 
 val storeFlow by lazy {
     createAnyFlow(
@@ -37,6 +39,13 @@ val blockA11yAppListFlow by lazy {
         key = "block_a11y_app_list",
         decode = { it?.let(AppListString::decode) ?: emptySet() },
         encode = AppListString::encode,
+    )
+}
+
+val xPageStoreFlow: MutableStateFlow<XPageStore> by lazy {
+    createAnyFlow(
+        key = "x_page",
+        default = { XPageStore() }
     )
 }
 

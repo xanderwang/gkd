@@ -14,6 +14,7 @@ import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 import li.songe.gkd.ui.component.PerfIcon
 import li.songe.gkd.ui.share.LocalMainViewModel
+import xanderwang.site.ui.page.useXPage
 
 sealed class BottomNavItem(
     val key: Int,
@@ -44,8 +45,14 @@ sealed class BottomNavItem(
         icon = PerfIcon.Settings,
     )
 
+    object Xpages : BottomNavItem(
+        key = 4,
+        label = "X",
+        icon = PerfIcon.Xpages,
+    )
+
     companion object {
-        val allSubObjects by lazy { arrayOf(Control, SubsManage, AppList, Settings) }
+        val allSubObjects by lazy { arrayOf(Control, SubsManage, AppList, Settings, Xpages) }
     }
 }
 
@@ -57,7 +64,7 @@ fun HomePage() {
     val mainVm = LocalMainViewModel.current
     viewModel<HomeVm>() // init state
     val tab by mainVm.tabFlow.collectAsState()
-    val pages = arrayOf(useControlPage(), useSubsManagePage(), useAppListPage(), useSettingsPage())
+    val pages = arrayOf(useControlPage(), useSubsManagePage(), useAppListPage(), useSettingsPage(), useXPage())
     val page = pages.find { p -> p.navItem.key == tab } ?: pages.first()
 
     Scaffold(
