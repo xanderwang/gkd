@@ -1,3 +1,4 @@
+import com.android.build.api.variant.KotlinMultiplatformAndroidComponentsExtension
 import li.gkd.gradle.CollectConsumerProguardRulesTask
 import li.gkd.gradle.ValidateStringResourcesTask
 import li.gkd.gradle.buildProperty
@@ -144,6 +145,20 @@ kotlin {
 dependencies {
     remapApi(project(":gkd-hidden-api"))
 }
+
+// li.songe.remap 0.1.7 puts a task-backed output provider into consumerProguardFiles.
+// AGP resolves that list while building the IDE KMP model, where task outputs cannot
+// be queried. Keep the same path but make it resolvable at configuration time, and
+// restore the task dependency for the consumers of the rules file.
+extensions.getByType(KotlinMultiplatformAndroidComponentsExtension::class.java)
+    .onVariants { variant ->
+        variant.consumerProguardFiles.set(
+            listOf(layout.buildDirectory.get().file("intermediates/remap/${variant.name}/consumer-rules.pro")),
+        )
+        val rulesTask = tasks.named(variant.computeTaskName("generate", "RemapConsumerRules"))
+        tasks.matching { it.name.contains("ConsumerProguardFiles") || it.name.startsWith("lint") }
+            .configureEach { dependsOn(rulesTask) }
+    }
 
 val jvmRegressionTests = tasks.named<Test>("jvmTest")
 

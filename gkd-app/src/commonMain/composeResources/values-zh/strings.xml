@@ -1226,4 +1226,23 @@
     <string name="snapshot_node_property_quick_find">可快速查找</string>
     <string name="snapshot_node_expand">展开</string>
     <string name="snapshot_node_collapse">收起</string>
+    <string name="sms_watch_tab">X</string>
+    <string name="sms_watch_section">常规</string>
+    <string name="sms_watch_enable">短信内容监控</string>
+    <string name="sms_watch_enable_toast">已打开短信监听</string>
+    <string name="sms_watch_disable_toast">已关闭短信监听</string>
+    <string name="sms_watch_keyword_title">需要监听的关键字</string>
+    <string name="sms_watch_edit_keyword">编辑监听关键字</string>
+    <string name="sms_watch_android_only">仅 Android 支持</string>
+    <string name="sms_watch_alarm_title">监听到报警短信</string>
+    <string name="sms_watch_alarm_text">点击停止报警铃声</string>
+    <string name="sms_watch_channel">短信监控服务</string>
+    <string name="overlay_time_service">时间悬浮窗</string>
+    <string name="overlay_time_description">在所有界面显示当前时间</string>
+    <string name="overlay_time_running">时间悬浮窗正在运行</string>
+    <string name="overlay_time_notification_description">长按关闭时间悬浮窗</string>
+    <string name="overlay_bg_alpha">背景透明度</string>
+    <string name="overlay_font_size">字体大小</string>
+    <string name="permission_read_sms">读取短信权限</string>
+    <string name="permission_read_sms_description">用于在常驻服务运行期间监控短信关键字并发出报警</string>
 </resources>

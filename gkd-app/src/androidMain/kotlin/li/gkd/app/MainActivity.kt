@@ -45,6 +45,7 @@ import li.gkd.app.util.ToastUtils
 import li.gkd.app.util.mapState
 import li.gkd.app.util.tryStartActivity
 import org.jetbrains.compose.resources.getString
+import xanderwang.site.service.OverlayTimeService
 
 class MainActivity : ComponentActivity() {
     val mainVm by
@@ -122,6 +123,7 @@ class MainActivity : ComponentActivity() {
             MainActivityIntents.consume(this)
         }
         StatusService.autoStart()
+        OverlayTimeService.autoStart()
         setContent {
             // Keep app bars stable when fullscreen hides system bars, while following window
             // changes.

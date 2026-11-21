@@ -1233,4 +1233,23 @@
     <string name="snapshot_node_property_quick_find">Supports quick find</string>
     <string name="snapshot_node_expand">Expand</string>
     <string name="snapshot_node_collapse">Collapse</string>
+    <string name="sms_watch_tab">X</string>
+    <string name="sms_watch_section">General</string>
+    <string name="sms_watch_enable">SMS content monitoring</string>
+    <string name="sms_watch_enable_toast">SMS monitoring enabled</string>
+    <string name="sms_watch_disable_toast">SMS monitoring disabled</string>
+    <string name="sms_watch_keyword_title">Keyword to watch</string>
+    <string name="sms_watch_edit_keyword">Edit watch keyword</string>
+    <string name="sms_watch_android_only">Android only</string>
+    <string name="sms_watch_alarm_title">Alert SMS received</string>
+    <string name="sms_watch_alarm_text">Tap to stop the alarm</string>
+    <string name="sms_watch_channel">SMS monitoring</string>
+    <string name="overlay_time_service">Floating clock</string>
+    <string name="overlay_time_description">Show the current time on all screens</string>
+    <string name="overlay_time_running">Floating clock is running</string>
+    <string name="overlay_time_notification_description">Long-press to close the floating clock</string>
+    <string name="overlay_bg_alpha">Background opacity</string>
+    <string name="overlay_font_size">Font size</string>
+    <string name="permission_read_sms">Read SMS</string>
+    <string name="permission_read_sms_description">Watch SMS keywords and raise an alarm while the persistent service runs</string>
 </resources>

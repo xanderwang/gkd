@@ -15,7 +15,8 @@ enum class AppNotificationChannel(
     val importance: Int = NotificationManager.IMPORTANCE_LOW,
 ) {
     Service(id = "0"),
-    Snapshot(id = "1", labelRes = Res.string.snapshot_notification_channel);
+    Snapshot(id = "1", labelRes = Res.string.snapshot_notification_channel),
+    SmsAlarm(id = "2", labelRes = Res.string.sms_watch_channel);
 
     val displayName: String
         get() = labelRes?.getSync() ?: META.appName

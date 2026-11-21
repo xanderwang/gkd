@@ -60,6 +60,11 @@ data class SettingsStore(
     val subsExcludeAppGroupType: Int = appGroupType,
     val showDisabledRule: Boolean = true,
     val snapshotDisplayMode: Int = SnapshotDisplayMode.ByTime.value,
+    val enableWatchSms: Boolean = false,
+    val smsWatchKey: String = "交警",
+    val enableTimeOverlay: Boolean = false,
+    val overlayBgAlpha: Float = 0.2f,
+    val overlayFontSize: Float = 14f,
 ) {
     val useA11y
         get() = automatorMode == AutomatorMode.A11y.value

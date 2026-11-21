@@ -35,6 +35,7 @@ import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material.icons.outlined.AutoMode
 import androidx.compose.material.icons.outlined.BrightnessAuto
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.Calculate
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.ContentCopy
@@ -293,6 +294,9 @@ object GkIcons {
 
     val Home
         get() = Icons.Outlined.Home
+
+    val Calculate
+        get() = Icons.Outlined.Calculate
 
     val FormatListBulleted
         get() = Icons.AutoMirrored.Filled.FormatListBulleted

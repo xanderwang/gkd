@@ -231,6 +231,15 @@ object PermissionStates {
         )
     }
 
+    val readSms by lazy {
+        requestablePermissionState(
+            id = "read_sms",
+            nameResource = Res.string.permission_read_sms,
+            purposeResource = Res.string.permission_read_sms_description,
+            permission = PermissionLists.getReadSmsPermission(),
+        )
+    }
+
     val queryPackages by lazy {
         requestablePermissionState(
             id = "query_packages",
@@ -315,6 +324,7 @@ object PermissionStates {
             writeSecureSettings,
             queryPackages,
             privilegeGranted,
+            readSms,
         )
     }
 

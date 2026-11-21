@@ -43,7 +43,14 @@ sealed class BottomNavItem(
             icon = GkIcons.Settings,
         )
 
+    object SmsWatch :
+        BottomNavItem(
+            key = 4,
+            labelResource = Res.string.sms_watch_tab,
+            icon = GkIcons.Calculate,
+        )
+
     companion object {
-        val allSubObjects by lazy { arrayOf(Dashboard, SubsManage, AppList, Settings) }
+        val allSubObjects by lazy { arrayOf(Dashboard, SubsManage, AppList, Settings, SmsWatch) }
     }
 }

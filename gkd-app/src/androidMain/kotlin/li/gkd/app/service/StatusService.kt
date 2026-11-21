@@ -1,5 +1,6 @@
 package li.gkd.app.service
 
+import android.content.Intent
 import androidx.lifecycle.lifecycleScope
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +29,8 @@ import li.gkd.app.settings.SettingsRepository.actionCount
 import li.gkd.app.settings.SettingsRepository.settings
 import li.gkd.app.util.IntentUtils
 import org.jetbrains.compose.resources.getString
+import xanderwang.site.service.SmsAlarm
+import xanderwang.site.service.SmsMonitor
 
 class StatusService : LifecycleHookService() {
 
@@ -94,8 +97,10 @@ class StatusService : LifecycleHookService() {
             name = Res.string.persistent_notification,
             showStartToast = !app.justStarted,
         )
+        onDestroyed { SmsMonitor.stop() }
         onCreated {
             if (!NotificationCatalog.status().startForeground()) return@onCreated
+            SmsMonitor.start()
             lifecycleScope.launch {
                 combine(
                         A11yService.isRunning,
@@ -122,6 +127,11 @@ class StatusService : LifecycleHookService() {
                     }
             }
         }
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        SmsAlarm.handleIntent(intent)
+        return super.onStartCommand(intent, flags, startId)
     }
 
     companion object {

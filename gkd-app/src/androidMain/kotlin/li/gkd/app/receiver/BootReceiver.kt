@@ -5,12 +5,14 @@ import android.content.Context
 import android.content.Intent
 import li.gkd.app.service.StatusService
 import li.gkd.app.service.fixRestartAutomatorService
+import xanderwang.site.service.OverlayTimeService
 
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             fixRestartAutomatorService()
             StatusService.autoStart()
+            OverlayTimeService.autoStart()
         }
     }
 }

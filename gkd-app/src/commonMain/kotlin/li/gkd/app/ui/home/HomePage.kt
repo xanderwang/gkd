@@ -5,6 +5,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import li.gkd.app.ui.MainViewModel
+import xanderwang.site.ui.page.xPage
 
 @Composable
 fun HomePage() {
@@ -23,6 +24,7 @@ fun HomePage() {
             BottomNavItem.AppList -> appListPage(vm, apps.value)
             BottomNavItem.SubsManage -> subsManagePage(vm, subscriptions.value)
             BottomNavItem.Settings -> settingsPage(vm)
+            BottomNavItem.SmsWatch -> xPage(vm)
         }
     }
 }

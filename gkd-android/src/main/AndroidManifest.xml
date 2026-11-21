@@ -21,6 +21,10 @@
     <uses-permission android:name="android.permission.DUMP" />
     <uses-permission android:name="android.permission.GET_APP_OPS_STATS" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <application
         android:name="li.gkd.app.App"
@@ -205,6 +209,14 @@
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Display a screenshot button for users to actively save screen information." />
+        </service>
+        <service
+            android:name="xanderwang.site.service.OverlayTimeService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Display a floating overlay button." />
         </service>
         <service
             android:name="li.gkd.app.service.ActivityService"

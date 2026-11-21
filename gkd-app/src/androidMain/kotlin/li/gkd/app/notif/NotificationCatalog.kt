@@ -16,6 +16,7 @@ import li.gkd.app.snapshot.SnapshotScreenshotStatus
 import li.gkd.app.ui.navigation.AdvancedSection
 import li.gkd.app.util.Constants
 import org.jetbrains.compose.resources.StringResource
+import xanderwang.site.service.OverlayTimeService
 
 enum class ForegroundNotificationKey(
     val id: Int,
@@ -30,6 +31,7 @@ enum class ForegroundNotificationKey(
     Event(id = 107),
     Track(id = 108),
     MatchDiagnostic(id = 109),
+    OverlayTime(id = 111),
 }
 
 enum class PostedNotificationKey(
@@ -38,6 +40,7 @@ enum class PostedNotificationKey(
 ) {
     SnapshotSaved(id = 105, channel = AppNotificationChannel.Snapshot),
     MatchDiagnosticSaved(id = 110, channel = AppNotificationChannel.Service),
+    SmsAlarm(id = 112, channel = AppNotificationChannel.SmsAlarm),
 }
 
 sealed interface AppNotificationSpec {
@@ -214,5 +217,13 @@ object NotificationCatalog {
             titleResource = Res.string.track_overlay_enabled,
             uri = AdvancedSection.Track.uri,
             stopService = TrackService::class,
+        )
+
+    fun overlayTime() =
+        ForegroundNotification(
+            key = ForegroundNotificationKey.OverlayTime,
+            titleResource = Res.string.overlay_time_running,
+            textResource = Res.string.overlay_time_notification_description,
+            stopService = OverlayTimeService::class,
         )
 }
